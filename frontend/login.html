@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login - Kiyamid College</title>
+  <link rel="shortcut icon" href="image/logo.png" type="image/png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="image/logo.png" alt="Logo" width="40" height="40" class="me-2" />
+        Kiyamid College
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="news.html">News</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="admission.html">Admission</a></li>
+          <li class="nav-item"><a class="nav-link" href="academics.html">Academics</a></li>
+          <li class="nav-item"><a class="nav-link" href="research.html">Research</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="comments.html">Feedback</a></li>
+          <li class="nav-item"><a class="nav-link active" href="login.html">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="page-header bg-primary text-white py-5 mt-5">
+    <div class="container text-center">
+      <h1 class="display-4">Admin Login</h1>
+      <p class="lead">Secure Access to Website Management</p>
+    </div>
+  </section>
+
+  <!-- Login Form -->
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-lg">
+          <div class="card-body p-5">
+            <div class="text-center mb-4">
+              <i class="fas fa-lock fa-3x text-primary mb-3"></i>
+              <h2>Administrator Login</h2>
+              <p class="text-muted">Enter your credentials to access the admin panel</p>
+            </div>
+
+            <div id="alertBox"></div>
+
+            <form id="loginForm">
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <input type="text" class="form-control" id="username" required />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-key"></i></span>
+                  <input type="password" class="form-control" id="password" required />
+                </div>
+              </div>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe" />
+                <label class="form-check-label" for="rememberMe">Remember me</label>
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Login</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <p>
+            <a href="index.html" class="text-decoration-none">
+              <i class="fas fa-arrow-left me-2"></i>Back to Homepage
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4">
+    <div class="container text-center">
+      <p>&copy; 2025 Kiyamid College. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- ✅ Auth Script -->
+  <script>
+    const API_BASE_URL = "http://localhost:5000/api"; // Update if backend runs elsewhere
+
+    async function login(event) {
+      event.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const alertBox = document.getElementById("alertBox");
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alertBox.innerHTML = `<div class="alert alert-danger">${data.message || "Invalid credentials"}</div>`;
+          return;
+        }
+
+        // Store token locally
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", username);
+
+        alertBox.innerHTML = `<div class="alert alert-success">Login successful! Redirecting...</div>`;
+
+        setTimeout(() => {
+          window.location.href = "admin.html"; // Redirect to your admin page
+        }, 1200);
+      } catch (error) {
+        console.error("Login error:", error);
+        alertBox.innerHTML = '<div class="alert alert-danger">Server error. Try again later.</div>';
+      }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", login);
+  </script>
+</body>
+</html>
