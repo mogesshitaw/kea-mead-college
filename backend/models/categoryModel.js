@@ -22,6 +22,7 @@ export const updateCategory = async (id, { name }) => {
 };
 
 export const deleteCategory = async (id) => {
+  await pool.query("DELETE FROM news WHERE category_id = ?", [id]);
   const [result] = await pool.query("DELETE FROM categories WHERE id = ?", [id]);
   return result;
 };

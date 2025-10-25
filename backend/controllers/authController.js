@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { createUser, findByUsername } from "../models/userModel.js";
+import { createUser, findByUsername ,findByEmail} from "../models/userModel.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 // Register a new user
 export const register = async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const { username,email, password, role } = req.body;
     if (!username || !password) {
       return res.status(400).json({ message: "Username and password are required" });
     }
@@ -16,9 +16,12 @@ export const register = async (req, res) => {
     if (existing) {
       return res.status(409).json({ message: "Username already exists" });
     }
-
+   const emailexisting = await findByEmail(email);
+    if (emailexisting) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
     const hashed = await bcrypt.hash(password, 10);
-    const result = await createUser({ username, password: hashed, role: role || "admin" });
+    const result = await createUser({ username,email, password: hashed, role: role || "admin" });
 
     res.status(201).json({ message: "User registered successfully", userId: result.insertId });
   } catch (error) {

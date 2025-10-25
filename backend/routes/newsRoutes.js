@@ -14,24 +14,26 @@ import { authenticateToken, authorizeAdmin } from "../middleware/authMiddleware.
 const router = express.Router();
 
 // Multer setup
-const UPLOAD_DIR = "uploads";
+// Configure Multer storage
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const base = path.basename(file.originalname, ext).replace(/\s+/g, "-").toLowerCase();
-    cb(null, `${Date.now()}-${base}${ext}`);
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // upload folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // unique name
   },
 });
+
 const upload = multer({ storage });
+
 
 // Public
 router.get("/", getNews);
 router.get("/:id", getNewsByIdController);
 
 // Protected admin endpoints (create/update/delete)
-router.post("/", authenticateToken, authorizeAdmin, upload.single("image"), createNews);
-router.put("/:id", authenticateToken, authorizeAdmin, upload.single("image"), updateNews);
-router.delete("/:id", authenticateToken, authorizeAdmin, deleteNews);
+router.post("/", upload.single("image"), createNews);
+router.put("/:id",upload.single("image"), updateNews);
+router.delete("/:id",  deleteNews);
 
 export default router;

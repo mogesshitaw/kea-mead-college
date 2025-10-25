@@ -22,10 +22,10 @@ const removeFileIfExists = (filename) => {
 export const createNews = async (req, res) => {
   try {
     const { title, content, category_id, author } = req.body;
-    const image = req.file ? req.file.filename : null;
+  const { filename } = req.file;
     if (!title || !content) return res.status(400).json({ message: "title & content required" });
 
-    const result = await createNewsModel({ title, content, image, category_id: category_id || null, author: author || null });
+    const result = await createNewsModel({ title, content, filename, category_id: category_id || null, author: author || null });
     res.status(201).json({ message: "News created", id: result.insertId });
   } catch (err) {
     console.error(err);
@@ -59,7 +59,8 @@ export const updateNews = async (req, res) => {
   try {
     const id = req.params.id;
     const { title, content, category_id, author } = req.body;
-    const newImage = req.file ? req.file.filename : null;
+      const { filename } = req.file;
+    const newImage = filename;
 
     const existing = await getNewsById(id);
     if (!existing) {
