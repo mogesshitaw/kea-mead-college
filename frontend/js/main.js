@@ -38,7 +38,7 @@
       list.innerHTML = comments.map(c => `
         <tr>
           <td>${c.name}</td>
-          <td>${c.comment}</td>
+          <td>${c.message}</td>
           <td>${new Date(c.created_at).toLocaleDateString()}</td>
           <td><button class="btn btn-danger btn-sm" onclick="deleteComment(${c.id})"><i class="fas fa-trash"></i></button></td>
         </tr>
@@ -47,7 +47,10 @@
 
     async function deleteComment(id) {
       if (!confirm("Delete this comment?")) return;
-      await fetch(`${API_BASE_URL}/comments/${id}`, { method: "DELETE", headers });
+      const res=await fetch(`${API_BASE_URL}/feedback/${id}`, { method: "DELETE", headers });
+       if(res.status==404){
+        alert(data.message);
+      }
       loadStats();
     }
 
@@ -119,7 +122,7 @@ async function editCategory(id, currentName) {
   if (!newName) return;
   const res = await fetch(`${API_BASE_URL}/categories/${id}`, {
     method: "PUT",
-    headers,
+    headersz,
     body: JSON.stringify({ name: newName }),
   });
   if (!res.ok) {
