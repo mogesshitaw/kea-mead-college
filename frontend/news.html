@@ -146,7 +146,7 @@ function renderNews(news) {
           ${n.image ? `<img src="../backend/uploads/${n.image}" class="card-img-top" alt="${n.title}">` : ""}
           <div class="card-body">
             <h5 class="card-title">${n.title}</h5>
-            <p class="card-text">${n.content ? n.content.substring(0, 120) + "..." : ""}</p>
+            <p class="card-text">${n.content ? n.content  : ""}</p>
             <small class="text-muted">
               ${n.created_at ? new Date(n.created_at).toLocaleDateString() : ""}
             </small>

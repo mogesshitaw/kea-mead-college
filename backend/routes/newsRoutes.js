@@ -9,6 +9,7 @@ import {
   updateNews,
   deleteNews,
 } from "../controllers/newsController.js";
+import { authenticateToken, authorizeAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 

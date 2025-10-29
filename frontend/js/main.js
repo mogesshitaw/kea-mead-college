@@ -234,7 +234,7 @@ async function addNews() {
             </div>
             <div class="mb-3">
               <label class="form-label">Image URL (optional)</label>
-              <input type="file" class="form-control" id="UNImage" value="${imageUrl || ""}" />
+              <input type="file" class="form-control" id="UNImage" value="${imageUrl}" />
             </div>
             <div id="previewContainer">
                 <img src="../backend/uploads/${imageUrl}" id="preview" class="preview" style="display: block;">
@@ -261,9 +261,6 @@ async function updateNews(id) {
   const category_id = document.getElementById("UNCategory").value.trim();
   const fileInput = document.getElementById("UNImage");
   const file = fileInput.files[0];
-    if (!file) {
-          alert('Please select an image');
-        }
   if (!title || !content) return alert("Title & content required");
 
   // Use FormData to handle file upload
